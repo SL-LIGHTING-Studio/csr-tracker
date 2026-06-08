@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SL LIGHTING — Haley's Comet CSR</title>
+<title>SL LIGHTING — Haley's Comet Csr</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -67,7 +67,39 @@
     padding: 120px 48px 80px;
     background: var(--white);
     position: relative;
+    overflow: hidden;
+    transition: background 0.6s ease;
   }
+  /* Banner background layers */
+  .hero-banner-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    z-index: 0;
+  }
+  .hero-banner-bg.loaded { opacity: 1; }
+  /* Subtle gradient overlay — text always readable */
+  .hero-banner-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.82) 0%,
+      rgba(255,255,255,0.72) 40%,
+      rgba(255,255,255,0.88) 100%
+    );
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .hero-banner-overlay.loaded { opacity: 1; }
+  /* When banner active, adjust text colors */
+  .hero.has-banner .hero-eyebrow { color: var(--red); }
+  .hero.has-banner .hero-title { color: var(--gray-800); }
+  .hero.has-banner .hero-sub { color: var(--gray-600); }
+  /* All hero content above overlay */
+  .hero > *:not(.hero-banner-bg):not(.hero-banner-overlay) { position: relative; z-index: 2; }
   .hero-eyebrow {
     font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--red);
@@ -433,6 +465,8 @@
 
 <!-- HERO -->
 <section class="hero" id="top">
+  <div class="hero-banner-bg" id="hero-banner-bg"></div>
+  <div class="hero-banner-overlay" id="hero-banner-overlay"></div>
   <p class="hero-eyebrow">CSR Campaign 2569</p>
   <h1 class="hero-title">
     HALEY's<br><span class="accent">COMET</span>
@@ -618,14 +652,42 @@
 
       <!-- Breakdown Tab -->
       <div class="tab-pane" id="tab-breakdown">
-        <p style="font-size:12px;color:#a0a0a0;margin-bottom:16px;line-height:1.6">
-          ดึงจาก Sheet หลักตัวเดียวกัน — group by <strong>sku</strong> อัตโนมัติ<br>
-          ไม่ต้องสร้าง tab แยก ใช้คอลัมน์ <strong>sku</strong> + <strong>qty</strong> ได้เลย
+        <!-- Banner Upload -->
+        <div style="margin-bottom:20px;">
+          <label class="field-label">แบนเนอร์ Hero (16:9)</label>
+          <div class="drop-zone" id="banner-drop-zone" style="padding:20px;">
+            <div id="banner-preview-wrap" style="display:none;margin-bottom:10px;">
+              <img id="banner-preview" style="width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;" alt="banner preview">
+            </div>
+            <div id="banner-drop-inner">
+              <div class="drop-icon" style="font-size:24px;">🖼️</div>
+              <div class="drop-text" style="font-size:13px;">วางรูปแบนเนอร์ที่นี่</div>
+              <div class="drop-hint">JPG / PNG — แนะนำ 1920×1080px</div>
+            </div>
+            <input type="file" id="banner-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-primary" id="banner-apply-btn" disabled style="flex:1;">ใช้เป็น Background</button>
+            <button class="btn-outline" id="banner-clear-btn" style="flex:0 0 auto;padding:14px 16px;">✕ ลบ</button>
+          </div>
+          <div id="banner-feedback" class="save-feedback" style="margin-top:8px;"></div>
+        </div>
+
+        <div style="height:0.5px;background:var(--gray-100);margin:4px 0 20px;"></div>
+
+        <!-- SKU Breakdown -->
+        <p style="font-size:12px;color:#a0a0a0;margin-bottom:12px;line-height:1.6">
+          ดึงจาก Sheet หลักตัวเดียวกัน — group by <strong>sku</strong> อัตโนมัติ
         </p>
         <button class="btn-outline" id="breakdown-refresh-btn">🔄 โหลดข้อมูลสัดส่วน</button>
         <div id="breakdown-chart-wrap" style="margin-top:20px;display:none;">
-          <canvas id="breakdown-chart" height="220"></canvas>
+          <canvas id="breakdown-chart" height="200"></canvas>
           <div id="breakdown-legend" style="margin-top:14px;font-size:13px;"></div>
+          <!-- Last updated badge -->
+          <div id="breakdown-updated" style="display:none;margin-top:16px;padding:10px 14px;background:var(--gray-50);border-radius:var(--radius-sm);border:0.5px solid var(--gray-200);font-size:12px;color:var(--gray-400);display:flex;align-items:center;gap:8px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;display:inline-block;"></span>
+            <span id="breakdown-updated-text">—</span>
+          </div>
         </div>
         <div id="breakdown-feedback" class="save-feedback"></div>
       </div>
@@ -808,11 +870,11 @@ window.addEventListener('load', () => {
 });
 
 /* ─────────────────────────────────────────
-   ADMIN KEY COMBO: Ctrl + Shift + Q
+   ADMIN KEY COMBO: Ctrl + Shift + A
 ───────────────────────────────────────── */
 let keyseq = [];
 document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'Q') {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
     e.preventDefault();
     openAdmin();
   }
@@ -1005,6 +1067,7 @@ function renderBreakdownChart(items) {
 
   const wrap = document.getElementById('breakdown-chart-wrap');
   wrap.style.display = 'block';
+  updateBreakdownTimestamp();
 
   const ctx = document.getElementById('breakdown-chart').getContext('2d');
   if (breakdownChart) breakdownChart.destroy();
@@ -1076,6 +1139,95 @@ document.getElementById('breakdown-refresh-btn').addEventListener('click', async
     }
   }
 });
+
+/* ─────────────────────────────────────────
+   HERO BANNER (admin upload)
+───────────────────────────────────────── */
+const bannerDropZone = document.getElementById('banner-drop-zone');
+const bannerFileInput = document.getElementById('banner-file-input');
+const bannerApplyBtn = document.getElementById('banner-apply-btn');
+const bannerClearBtn = document.getElementById('banner-clear-btn');
+let bannerDataUrl = null;
+
+(function loadSavedBanner() {
+  try { const saved = LS.get('hero_banner', null); if (saved) applyBanner(saved, false); } catch(e) {}
+})();
+
+bannerDropZone.addEventListener('click', () => bannerFileInput.click());
+bannerDropZone.addEventListener('dragover', e => { e.preventDefault(); bannerDropZone.classList.add('drag'); });
+bannerDropZone.addEventListener('dragleave', () => bannerDropZone.classList.remove('drag'));
+bannerDropZone.addEventListener('drop', e => {
+  e.preventDefault(); bannerDropZone.classList.remove('drag');
+  const f = e.dataTransfer.files[0]; if (f) readBannerFile(f);
+});
+bannerFileInput.addEventListener('change', e => { if (e.target.files[0]) readBannerFile(e.target.files[0]); });
+
+function readBannerFile(file) {
+  if (!file.type.startsWith('image/')) { showFeedback('banner-feedback', 'กรุณาเลือกไฟล์รูปภาพ', false); return; }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    bannerDataUrl = ev.target.result;
+    const preview = document.getElementById('banner-preview');
+    preview.src = bannerDataUrl;
+    document.getElementById('banner-preview-wrap').style.display = 'block';
+    document.getElementById('banner-drop-inner').style.display = 'none';
+    bannerApplyBtn.disabled = false;
+    showFeedback('banner-feedback', '✓ โหลดรูปแล้ว — กด "ใช้เป็น Background" เพื่อแสดง', true);
+  };
+  reader.readAsDataURL(file);
+}
+
+bannerApplyBtn.addEventListener('click', () => {
+  if (!bannerDataUrl) return;
+  try { LS.set('hero_banner', bannerDataUrl); } catch(e) {}
+  applyBanner(bannerDataUrl, true);
+  showFeedback('banner-feedback', '✓ ใช้แบนเนอร์แล้ว', true);
+});
+
+bannerClearBtn.addEventListener('click', () => {
+  bannerDataUrl = null;
+  try { LS.set('hero_banner', null); } catch(e) {}
+  clearBanner();
+  document.getElementById('banner-preview-wrap').style.display = 'none';
+  document.getElementById('banner-drop-inner').style.display = 'block';
+  bannerApplyBtn.disabled = true;
+  bannerFileInput.value = '';
+  showFeedback('banner-feedback', '✓ ลบแบนเนอร์แล้ว', true);
+});
+
+function applyBanner(dataUrl, animate) {
+  const hero = document.querySelector('.hero');
+  const bg = document.getElementById('hero-banner-bg');
+  const ov = document.getElementById('hero-banner-overlay');
+  bg.style.backgroundImage = 'url(' + dataUrl + ')';
+  hero.classList.add('has-banner');
+  if (animate) {
+    requestAnimationFrame(() => { bg.classList.add('loaded'); ov.classList.add('loaded'); });
+  } else { bg.classList.add('loaded'); ov.classList.add('loaded'); }
+}
+
+function clearBanner() {
+  const hero = document.querySelector('.hero');
+  const bg = document.getElementById('hero-banner-bg');
+  const ov = document.getElementById('hero-banner-overlay');
+  bg.classList.remove('loaded'); ov.classList.remove('loaded');
+  hero.classList.remove('has-banner');
+  setTimeout(() => { bg.style.backgroundImage = ''; }, 800);
+}
+
+/* ─────────────────────────────────────────
+   BREAKDOWN LAST UPDATED BADGE
+───────────────────────────────────────── */
+function updateBreakdownTimestamp() {
+  const el = document.getElementById('breakdown-updated');
+  const txt = document.getElementById('breakdown-updated-text');
+  if (!el || !txt) return;
+  el.style.display = 'flex';
+  const now = new Date();
+  txt.textContent = 'ข้อมูล ณ ' + now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) +
+    ' เวลา ' + now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+}
+
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
