@@ -490,6 +490,27 @@
       <span class="ring-label">ชิ้น / 100,000</span>
     </div>
   </div>
+
+  <!-- Last Updated Badge — public facing -->
+  <div id="public-last-updated" style="
+    opacity:0; animation: fadeUp 0.8s 0.65s forwards;
+    display:flex; align-items:center; gap:8px;
+    padding:10px 18px;
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:0.5px solid var(--gray-200);
+    border-radius:100px;
+    font-size:12px; color:var(--gray-400);
+    letter-spacing:0.02em;
+  ">
+    <span id="public-updated-dot" style="
+      width:6px; height:6px; border-radius:50%;
+      background:var(--gray-200); flex-shrink:0;
+      transition:background 0.4s;
+    "></span>
+    <span id="public-updated-text">กำลังโหลด…</span>
+  </div>
 </section>
 
 <!-- STATS STRIP -->
@@ -765,12 +786,22 @@ function renderUI(s) {
   const badge = document.getElementById('milestone-badge');
   badge.style.display = s.bulbs >= CONFIG.milestoneTarget ? 'inline-block' : 'none';
 
-  // Last updated
+  // Last updated — update bar (footer) + public badge under ring
   if (s.lastUpdated) {
     const d = new Date(s.lastUpdated);
-    document.getElementById('last-updated-time').textContent =
-      d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) +
-      ' เวลา ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+    const timeStr = d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+    const fullStr = dateStr + ' ' + timeStr;
+
+    // footer bar
+    const footerEl = document.getElementById('last-updated-time');
+    if (footerEl) footerEl.textContent = fullStr;
+
+    // public badge under ring
+    const pubText = document.getElementById('public-updated-text');
+    const pubDot  = document.getElementById('public-updated-dot');
+    if (pubText) pubText.textContent = 'อัพเดตล่าสุด ' + fullStr;
+    if (pubDot)  pubDot.style.background = '#22c55e';
   }
 }
 
