@@ -618,9 +618,9 @@
 <!-- MILESTONE SECTION -->
 <section class="milestone-section">
   <p class="section-label">Milestone Bonus</p>
-  <h2 class="section-title">ครบ 100,000 ชิ้น<br>บริจาคเพิ่มอีก 100,000 บาท</h2>
+  <h2 class="section-title">ทุก 100,000 ชิ้น<br>บริจาคเพิ่มอีก 100,000 บาท</h2>
   <p class="section-body">
-    เมื่อยอดสินค้าสะสมถึง 100,000 ชิ้น SL LIGHTING จะบริจาคเพิ่มพิเศษอีก 100,000 บาท ให้มูลนิธิรามาธิบดีฯ ทันที
+    ทุกครั้งที่ยอดสะสมครบทุก 100,000 ชิ้น SL LIGHTING จะบริจาคเพิ่มพิเศษอีก 100,000 บาท ให้มูลนิธิรามาธิบดีฯ ทันที ไม่จำกัดจำนวนครั้ง
   </p>
   <div class="milestone-bar-wrap">
     <div class="milestone-bar-fill" id="milestone-bar"></div>
@@ -658,7 +658,7 @@
       </div>
     </div>
     <div class="formula-bonus">
-      เมื่อสะสมครบ <strong>100,000 ชิ้น</strong> — บริจาคพิเศษเพิ่มอีก <strong>100,000 บาท</strong><br><span style="font-size:13px;opacity:0.6;">ให้มูลนิธิรามาธิบดีฯ</span>
+      ทุก <strong>100,000 ชิ้น</strong> — บริจาค Bonus เพิ่มอีก <strong>100,000 บาท</strong> ไม่จำกัดครั้ง<br><span style="font-size:13px;opacity:0.6;">ยิ่งซื้อมาก ยิ่งบริจาคมาก ให้มูลนิธิรามาธิบดีฯ</span>
     </div>
   </div>
 </section>
@@ -760,20 +760,44 @@
         <!-- Banner Upload -->
         <div style="margin-bottom:20px;">
           <label class="field-label">แบนเนอร์ Hero (16:9)</label>
-          <div class="drop-zone" id="banner-drop-zone" style="padding:20px;">
-            <div id="banner-preview-wrap" style="display:none;margin-bottom:10px;">
+
+          <!-- Step instructions -->
+          <div style="background:var(--gray-50);border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;font-size:12px;color:var(--gray-600);line-height:1.8;">
+            <div style="font-weight:500;color:var(--gray-800);margin-bottom:6px;">📋 วิธีอัพโหลดรูปแบนเนอร์</div>
+            <div><span style="font-weight:500;color:var(--red);">ตัวเลือก A</span> — วาง URL รูปจากอินเทอร์เน็ต (แนะนำ)</div>
+            <div style="padding-left:12px;color:var(--gray-400);font-size:11px;margin-bottom:6px;">เช่น Google Drive, Dropbox, imgbb.com, postimages.org</div>
+            <div><span style="font-weight:500;color:var(--red);">ตัวเลือก B</span> — อัพโหลดไฟล์จากเครื่อง</div>
+            <div style="padding-left:12px;color:var(--gray-400);font-size:11px;">รูปจะเก็บใน browser นี้เท่านั้น (ไม่ sync กับคนอื่น)</div>
+          </div>
+
+          <!-- Option A: URL input -->
+          <label class="field-label" style="margin-bottom:6px;">ตัวเลือก A — URL รูป</label>
+          <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <input type="text" class="field-input" id="banner-url-input"
+              placeholder="https://i.postimg.cc/xxxx/banner.jpg"
+              style="margin-bottom:0;flex:1;font-size:13px;">
+            <button class="btn-primary" id="banner-url-apply-btn" style="flex:0 0 auto;white-space:nowrap;padding:12px 16px;font-size:13px;">ใช้ URL</button>
+          </div>
+
+          <!-- Option B: File upload -->
+          <label class="field-label" style="margin-bottom:6px;">ตัวเลือก B — อัพโหลดไฟล์</label>
+          <div class="drop-zone" id="banner-drop-zone" style="padding:16px;">
+            <div id="banner-preview-wrap" style="display:none;margin-bottom:8px;">
               <img id="banner-preview" style="width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;" alt="banner preview">
             </div>
-            <div id="banner-drop-inner">
-              <div class="drop-icon" style="font-size:24px;">🖼️</div>
-              <div class="drop-text" style="font-size:13px;">วางรูปแบนเนอร์ที่นี่</div>
-              <div class="drop-hint">JPG / PNG — แนะนำ 1920×1080px</div>
+            <div id="banner-drop-inner" style="display:flex;align-items:center;gap:10px;justify-content:center;">
+              <span style="font-size:22px;">🖼️</span>
+              <div>
+                <div class="drop-text" style="font-size:13px;margin-bottom:2px;">วางหรือคลิกเลือกรูป</div>
+                <div class="drop-hint">JPG / PNG — แนะนำ 1920×1080px</div>
+              </div>
             </div>
             <input type="file" id="banner-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
           </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn-primary" id="banner-apply-btn" disabled style="flex:1;">ใช้เป็น Background</button>
-            <button class="btn-outline" id="banner-clear-btn" style="flex:0 0 auto;padding:14px 16px;">✕ ลบ</button>
+
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn-primary" id="banner-apply-btn" disabled style="flex:1;">ใช้ไฟล์ที่เลือก</button>
+            <button class="btn-outline" id="banner-clear-btn" style="flex:0 0 auto;padding:12px 16px;">✕ ลบแบนเนอร์</button>
           </div>
           <div id="banner-feedback" class="save-feedback" style="margin-top:8px;"></div>
         </div>
@@ -862,13 +886,34 @@ function renderUI(s) {
   document.getElementById('stat-donation').textContent = '฿' + fmt(s.donation);
   document.getElementById('stat-period').textContent = s.period || '—';
 
-  // Milestone
-  document.getElementById('milestone-bar').style.width = (pct * 100) + '%';
-  document.getElementById('milestone-pct').textContent =
-    fmt(s.bulbs) + ' / ' + fmt(CONFIG.milestoneTarget) + ' หลอด (' + Math.round(pct * 100) + '%)';
+  // Milestone — bar shows progress within current 100k bracket
+  const milestonesPassed = Math.floor(s.bulbs / CONFIG.milestoneTarget);
+  const nextMilestone = (milestonesPassed + 1) * CONFIG.milestoneTarget;
+  const prevMilestone = milestonesPassed * CONFIG.milestoneTarget;
+  const withinPct = s.bulbs >= CONFIG.milestoneTarget
+    ? ((s.bulbs - prevMilestone) / CONFIG.milestoneTarget)
+    : (s.bulbs / CONFIG.milestoneTarget);
+  const barPct = Math.min(withinPct, 1);
 
+  document.getElementById('milestone-bar').style.width = (barPct * 100) + '%';
+
+  // Milestone pct text
+  const bonusCount = milestonesPassed;
+  const bonusTotal = bonusCount * 100000;
+  let milestoneText = fmt(s.bulbs) + ' / ' + fmt(nextMilestone) + ' ชิ้น (' + Math.round(barPct * 100) + '%)';
+  if (bonusCount > 0) {
+    milestoneText += ' — ได้รับ Bonus แล้ว ' + bonusCount + ' ครั้ง (+฿' + fmt(bonusTotal) + ')';
+  }
+  document.getElementById('milestone-pct').textContent = milestoneText;
+
+  // Badge
   const badge = document.getElementById('milestone-badge');
-  badge.style.display = s.bulbs >= CONFIG.milestoneTarget ? 'inline-block' : 'none';
+  if (s.bulbs >= CONFIG.milestoneTarget) {
+    badge.style.display = 'inline-block';
+    badge.textContent = '🎉 ถึง Milestone ' + bonusCount + ' ครั้งแล้ว! บริจาค Bonus รวม ฿' + fmt(bonusTotal);
+  } else {
+    badge.style.display = 'none';
+  }
 
   // Last updated — update bar (footer) + public badge under ring
   if (s.lastUpdated) {
@@ -889,8 +934,27 @@ function renderUI(s) {
   }
 }
 
+function calcBonus(bulbs) {
+  // ทุก 100,000 ชิ้น = bonus 100,000 บาท
+  return Math.floor(bulbs / CONFIG.milestoneTarget) * 100000;
+}
+
 function applyData(bulbs, donation, period, skuMap) {
-  state = { bulbs: +bulbs || 0, donation: +donation || 0, period: period || '—', lastUpdated: new Date().toISOString(), skuMap: skuMap || {} };
+  const b = +bulbs || 0;
+  const bonus = calcBonus(b);
+  // ถ้า Sheet มี donation column ให้ใช้ แต่ถ้าไม่มี (donation=0 หรือ = bulbs) ให้คำนวณเอง
+  const rawDon = +donation || 0;
+  const baseDon = rawDon > 0 ? rawDon : b;
+  const totalDon = baseDon + bonus;
+  state = {
+    bulbs: b,
+    donation: totalDon,
+    baseDonation: baseDon,
+    bonus: bonus,
+    period: period || '—',
+    lastUpdated: new Date().toISOString(),
+    skuMap: skuMap || {}
+  };
   LS.set('csr_data', state);
   renderUI(state);
 }
@@ -1265,8 +1329,45 @@ const bannerClearBtn = document.getElementById('banner-clear-btn');
 let bannerDataUrl = null;
 
 (function loadSavedBanner() {
-  try { const saved = LS.get('hero_banner', null); if (saved) applyBanner(saved, false); } catch(e) {}
+  try {
+    const saved = LS.get('hero_banner', null);
+    if (saved) {
+      applyBanner(saved, false);
+      bannerDataUrl = saved;
+      // If it's a URL (not base64), populate the URL input
+      if (saved.startsWith('http')) {
+        const urlInput = document.getElementById('banner-url-input');
+        if (urlInput) urlInput.value = saved;
+        const preview = document.getElementById('banner-preview');
+        if (preview) { preview.src = saved; document.getElementById('banner-preview-wrap').style.display = 'block'; document.getElementById('banner-drop-inner').style.display = 'none'; }
+      }
+    }
+  } catch(e) {}
 })();
+
+// Option A: URL input
+document.getElementById('banner-url-apply-btn').addEventListener('click', () => {
+  const url = document.getElementById('banner-url-input').value.trim();
+  if (!url) { showFeedback('banner-feedback', 'กรุณาใส่ URL รูปภาพ', false); return; }
+  // Test image loads
+  const testImg = new Image();
+  testImg.onload = () => {
+    // Show preview
+    const preview = document.getElementById('banner-preview');
+    preview.src = url;
+    document.getElementById('banner-preview-wrap').style.display = 'block';
+    document.getElementById('banner-drop-inner').style.display = 'none';
+    bannerDataUrl = url;
+    bannerApplyBtn.disabled = false;
+    try { LS.set('hero_banner', url); } catch(e) {}
+    applyBanner(url, true);
+    showFeedback('banner-feedback', '✓ ใช้รูปจาก URL แล้ว', true);
+  };
+  testImg.onerror = () => {
+    showFeedback('banner-feedback', '❌ โหลดรูปไม่ได้ — ลอง postimages.org หรือ imgbb.com', false);
+  };
+  testImg.src = url;
+});
 
 bannerDropZone.addEventListener('click', () => bannerFileInput.click());
 bannerDropZone.addEventListener('dragover', e => { e.preventDefault(); bannerDropZone.classList.add('drag'); });
