@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SL LIGHTING — Haley's Comet Csr</title>
+<title>HALEY's COMET - SL LIGHTING</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -57,89 +57,139 @@
     transition: color var(--transition);
   }
   .nav-links a:hover { color: var(--gray-800); }
+  .nav-contact-link {
+    color: var(--red) !important;
+    font-weight: 500 !important;
+    padding: 6px 14px;
+    border: 0.5px solid rgba(192,57,43,0.3);
+    border-radius: 100px;
+    transition: all var(--transition) !important;
+  }
+  .nav-contact-link:hover {
+    background: var(--red) !important;
+    color: var(--white) !important;
+    border-color: var(--red) !important;
+  }
 
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 120px 48px 80px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 100px 72px 80px;
     background: var(--white);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     transition: background 0.6s ease;
   }
-  /* Banner background layers */
+
+  /* Banner bg */
   .hero-banner-bg {
     position: absolute; inset: 0;
     background-size: cover; background-position: center;
     background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-    z-index: 0;
+    opacity: 0; transition: opacity 0.9s ease; z-index: 0;
   }
   .hero-banner-bg.loaded { opacity: 1; }
-  /* Subtle gradient overlay — text always readable */
+  /* Gradient overlay — left side lighter for text, fades right */
   .hero-banner-overlay {
     position: absolute; inset: 0;
     background: linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.82) 0%,
-      rgba(255,255,255,0.72) 40%,
-      rgba(255,255,255,0.88) 100%
+      105deg,
+      rgba(255,255,255,0.90) 0%,
+      rgba(255,255,255,0.78) 38%,
+      rgba(255,255,255,0.42) 65%,
+      rgba(255,255,255,0.18) 100%
     );
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.8s ease;
+    z-index: 1; opacity: 0; transition: opacity 0.9s ease;
   }
   .hero-banner-overlay.loaded { opacity: 1; }
-  /* When banner active, adjust text colors */
-  .hero.has-banner .hero-eyebrow { color: var(--red); }
-  .hero.has-banner .hero-title { color: var(--gray-800); }
-  .hero.has-banner .hero-sub { color: var(--gray-600); }
-  /* All hero content above overlay */
-  .hero > *:not(.hero-banner-bg):not(.hero-banner-overlay) { position: relative; z-index: 2; }
+
+  /* 2-col inner */
+  .hero-inner {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 1100px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 48px;
+  }
+
+  /* LEFT */
+  .hero-left { text-align: left; }
   .hero-eyebrow {
     font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--red);
-    margin-bottom: 20px;
-    opacity: 0; animation: fadeUp 0.8s 0.1s forwards;
+    margin-bottom: 18px;
+    opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
   }
   .hero-title {
-    font-size: clamp(42px, 7vw, 88px);
+    font-size: clamp(42px, 5.5vw, 76px);
     font-weight: 600; letter-spacing: -0.04em;
-    line-height: 1.05; color: var(--gray-800);
-    margin-bottom: 24px;
-    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+    line-height: 1.0; color: var(--gray-800);
+    margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
   }
   .hero-title .accent { color: var(--red); }
   .hero-sub {
-    font-size: clamp(17px, 2vw, 21px); font-weight: 300;
-    color: var(--gray-600); line-height: 1.6; max-width: 560px;
-    margin-bottom: 64px;
-    opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+    font-size: clamp(14px, 1.5vw, 17px); font-weight: 300;
+    color: var(--gray-600); line-height: 1.75;
+    margin-bottom: 36px;
+    opacity: 0; animation: fadeUp 0.7s 0.32s forwards;
   }
+  .hero-sub-highlight {
+    font-weight: 500; color: var(--gray-800);
+  }
+  .hero-sub-cause {
+    font-size: 0.88em; color: var(--gray-400);
+  }
+  .hero-cta {
+    display: inline-block;
+    padding: 13px 28px;
+    background: var(--gray-800); color: var(--white);
+    font-size: 14px; font-weight: 500;
+    text-decoration: none; border-radius: 100px;
+    transition: background var(--transition), transform 0.2s;
+    opacity: 0; animation: fadeUp 0.7s 0.44s forwards;
+  }
+  .hero-cta:hover { background: #000; transform: translateY(-1px); }
 
-  /* ── MAIN COUNTER ── */
-  .counter-ring-wrap {
-    position: relative; width: 280px; height: 280px;
-    margin: 0 auto 48px;
+  /* RIGHT */
+  .hero-right {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 20px;
     opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
   }
-  .ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+  /* Ring */
+  .counter-ring-wrap {
+    position: relative; width: 280px; height: 280px;
+    margin: 0 auto;
+  }
+  /* Soft glow behind ring */
+  .ring-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(192,57,43,0.10) 0%, rgba(192,57,43,0.04) 55%, transparent 75%);
+    filter: blur(18px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); position: relative; z-index: 1; }
   .ring-bg { fill: none; stroke: var(--gray-100); stroke-width: 14; }
   .ring-fill {
     fill: none; stroke: var(--red); stroke-width: 14;
     stroke-linecap: round;
-    stroke-dasharray: 754;
-    stroke-dashoffset: 754;
+    stroke-dasharray: 754; stroke-dashoffset: 754;
     transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Subtle glow on stroke */
+    filter: drop-shadow(0 0 6px rgba(192,57,43,0.35));
   }
   .ring-inner {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
+    text-align: center; z-index: 2;
   }
   .ring-count {
     font-size: 44px; font-weight: 600; letter-spacing: -0.04em;
@@ -147,6 +197,37 @@
     display: block; margin-bottom: 4px;
   }
   .ring-label { font-size: 12px; color: var(--gray-400); letter-spacing: 0.06em; }
+
+  /* Last updated badge */
+  #public-last-updated {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px;
+    background: rgba(255,255,255,0.80);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 0.5px solid var(--gray-200);
+    border-radius: 100px;
+    font-size: 11.5px; color: var(--gray-400);
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+  }
+  #public-updated-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gray-200); flex-shrink: 0;
+    transition: background 0.4s;
+    display: inline-block;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero { padding: 100px 24px 60px; }
+    .hero-inner {
+      grid-template-columns: 1fr;
+      text-align: center; gap: 40px;
+    }
+    .hero-left { text-align: center; }
+    .counter-ring-wrap { width: 220px; height: 220px; }
+    .ring-count { font-size: 34px; }
+  }
 
   /* ── STATS STRIP ── */
   .stats-section {
@@ -440,7 +521,6 @@
 
   @media (max-width: 640px) {
     nav { padding: 0 20px; }
-    .hero { padding: 100px 20px 60px; }
     .stats-section { padding: 48px 20px; }
     .stats-grid { grid-template-columns: 1fr; }
     .milestone-section { padding: 60px 20px; }
@@ -460,57 +540,61 @@
   <ul class="nav-links">
     <li><a href="#progress">ความคืบหน้า</a></li>
     <li><a href="#formula">โครงการ</a></li>
+    <li><a href="https://sllighting.link/m/csr-haley-comet" target="_blank" rel="noopener" class="nav-contact-link">ติดต่อเรา</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section class="hero" id="top">
+  <!-- Banner background layers -->
   <div class="hero-banner-bg" id="hero-banner-bg"></div>
   <div class="hero-banner-overlay" id="hero-banner-overlay"></div>
-  <p class="hero-eyebrow">CSR Campaign 2569</p>
-  <h1 class="hero-title">
-    HALEY's<br><span class="accent">COMET</span>
-  </h1>
-  <p class="hero-sub">
-    ซื้อหลอดไฟ LED T8 รุ่น COMET หรือชุดรางไฟ LED T8 รุ่น HALEY<br>
-    ทุก 1 ชิ้น = บริจาค 1 บาท สมทบทุนช่วยเหลือโครงการผู้ป่วยเด็กยากไร้<br>
-    <span style="font-size:0.8em;opacity:0.75;">มูลนิธิรามาธิบดีฯ</span>
-  </p>
 
-  <!-- Ring Counter -->
-  <div class="counter-ring-wrap" id="progress">
-    <svg class="ring-svg" viewBox="0 0 240 240">
-      <circle class="ring-bg" cx="120" cy="120" r="110"/>
-      <circle class="ring-fill" id="ring-fill" cx="120" cy="120" r="110"/>
-    </svg>
-    <div class="ring-inner">
-      <span class="ring-count" id="hero-bulbs">
-        <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
-      </span>
-      <span class="ring-label">ชิ้น / 100,000</span>
+  <!-- 2-col layout: LEFT text / RIGHT donut -->
+  <div class="hero-inner">
+
+    <!-- LEFT: text content -->
+    <div class="hero-left">
+      <p class="hero-eyebrow">CSR Campaign 2569</p>
+      <h1 class="hero-title">
+        HALEY's<br><span class="accent">COMET</span>
+      </h1>
+      <p class="hero-sub">
+        ซื้อหลอดไฟ LED T8 รุ่น COMET<br>
+        หรือชุดรางไฟ LED T8 รุ่น HALEY<br>
+        <span class="hero-sub-highlight">ทุก 1 ชิ้น = บริจาค 1 บาท</span><br>
+        <span class="hero-sub-cause">สมทบทุนช่วยผู้ป่วยเด็กยากไร้<br>มูลนิธิรามาธิบดีฯ</span>
+      </p>
+      <a href="https://sllighting.link/m/csr-haley-comet" target="_blank" rel="noopener" class="hero-cta">
+        ร่วมสนับสนุน →
+      </a>
     </div>
-  </div>
 
-  <!-- Last Updated Badge — public facing -->
-  <div id="public-last-updated" style="
-    opacity:0; animation: fadeUp 0.8s 0.65s forwards;
-    display:flex; align-items:center; gap:8px;
-    padding:10px 18px;
-    background:rgba(255,255,255,0.72);
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-    border:0.5px solid var(--gray-200);
-    border-radius:100px;
-    font-size:12px; color:var(--gray-400);
-    letter-spacing:0.02em;
-  ">
-    <span id="public-updated-dot" style="
-      width:6px; height:6px; border-radius:50%;
-      background:var(--gray-200); flex-shrink:0;
-      transition:background 0.4s;
-    "></span>
-    <span id="public-updated-text">กำลังโหลด…</span>
-  </div>
+    <!-- RIGHT: donut ring + last updated -->
+    <div class="hero-right" id="progress">
+      <div class="counter-ring-wrap">
+        <!-- Glow shadow behind ring -->
+        <div class="ring-glow"></div>
+        <svg class="ring-svg" viewBox="0 0 240 240">
+          <circle class="ring-bg" cx="120" cy="120" r="110"/>
+          <circle class="ring-fill" id="ring-fill" cx="120" cy="120" r="110"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="ring-count" id="hero-bulbs">
+            <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
+          </span>
+          <span class="ring-label">ชิ้น / 100,000</span>
+        </div>
+      </div>
+
+      <!-- Last Updated Badge -->
+      <div id="public-last-updated">
+        <span id="public-updated-dot"></span>
+        <span id="public-updated-text">กำลังโหลด…</span>
+      </div>
+    </div>
+
+  </div><!-- /hero-inner -->
 </section>
 
 <!-- STATS STRIP -->
