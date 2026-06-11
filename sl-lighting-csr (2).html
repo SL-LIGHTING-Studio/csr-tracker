@@ -419,6 +419,8 @@
     padding: 40px;
     width: 100%; max-width: 480px;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   .admin-close {
     position: absolute; top: 16px; right: 16px;
@@ -489,10 +491,12 @@
 
   /* Tabs */
   .tab-row {
-    display: flex; gap: 4px; padding: 4px;
+    display: flex; gap: 3px; padding: 4px;
     background: var(--gray-100); border-radius: var(--radius-sm);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
   }
+  .tab-row .tab-btn { flex: 1 1 auto; min-width: 0; font-size: 12px; padding: 7px 6px; }
   .tab-btn {
     flex: 1; padding: 8px; border: none;
     background: transparent; border-radius: 6px;
@@ -781,6 +785,7 @@
         <button class="tab-btn active" data-tab="manual">กรอกเอง</button>
         <button class="tab-btn" data-tab="excel">Excel</button>
         <button class="tab-btn" data-tab="sheet">Google Sheet</button>
+        <button class="tab-btn" data-tab="banner">แบนเนอร์</button>
         <button class="tab-btn" data-tab="breakdown">สัดส่วน</button>
       </div>
 
@@ -834,43 +839,39 @@
         <div id="sheet-feedback" class="save-feedback"></div>
       </div>
 
-      <!-- Breakdown Tab -->
-      <div class="tab-pane" id="tab-breakdown">
-        <!-- Banner Upload -->
-        <div style="margin-bottom:20px;">
-          <label class="field-label">แบนเนอร์ Hero (16:9)</label>
+      <!-- Banner Tab -->
+      <div class="tab-pane" id="tab-banner">
+        <div style="overflow-y:auto;max-height:60vh;padding-right:4px;">
 
-          <!-- Step instructions -->
-          <div style="background:var(--gray-50);border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;font-size:12px;color:var(--gray-600);line-height:1.9;">
-            <div style="font-weight:600;color:var(--gray-800);margin-bottom:8px;">📋 วิธีอัพเดตแบนเนอร์ Slider (ทุกคนเห็น)</div>
-
-            <div style="font-weight:500;color:var(--red);margin-bottom:2px;">🌐 วิธีที่แนะนำ — ผ่าน Google Sheet</div>
-            <div style="background:var(--white);border-radius:6px;padding:10px 12px;margin-bottom:8px;border:0.5px solid var(--gray-200);">
+          <!-- Instructions -->
+          <div style="background:var(--gray-50);border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;font-size:12px;color:var(--gray-600);line-height:1.9;">
+            <div style="font-weight:600;color:var(--gray-800);margin-bottom:8px;">📋 วิธีอัพเดตแบนเนอร์ Slider</div>
+            <div style="font-weight:500;color:var(--red);margin-bottom:4px;">🌐 แนะนำ — ผ่าน Google Sheet (ทุกคนเห็น)</div>
+            <div style="background:var(--white);border-radius:6px;padding:10px 12px;margin-bottom:10px;border:0.5px solid var(--gray-200);">
               <div>1. เปิด Google Sheet → สร้าง tab ใหม่ชื่อ <strong>banners</strong></div>
-              <div>2. แถวแรก (header): คอลัมน์ A = <strong>url</strong> &nbsp; คอลัมน์ B = <strong>caption</strong></div>
-              <div>3. แถวต่อไป: ใส่ URL รูปในคอลัมน์ A (1 แถว = 1 slide)</div>
-              <div>4. รูปจะอัพเดตอัตโนมัติทุก 5 นาที ทุกคนเห็นพร้อมกัน ✓</div>
-              <div style="color:var(--gray-400);font-size:11px;margin-top:4px;">💡 อัพโหลดรูปไปที่ postimages.org → copy Direct link มาวางใน Sheet</div>
+              <div>2. แถว 1 (header): A = <strong>url</strong> &nbsp;·&nbsp; B = <strong>caption</strong></div>
+              <div>3. แถวต่อไป: ใส่ URL รูป 1 แถว = 1 slide</div>
+              <div>4. อัพเดตอัตโนมัติทุก 5 นาที ✓</div>
+              <div style="color:var(--gray-400);font-size:11px;margin-top:4px;">💡 อัพโหลดรูปที่ <strong>postimages.org</strong> → copy Direct link</div>
             </div>
-
-            <div style="font-weight:500;color:var(--gray-600);margin-bottom:2px;">📁 วิธีสำรอง — URL หรือไฟล์ (เห็นแค่ browser นี้)</div>
-            <div style="color:var(--gray-400);font-size:11px;">ใช้ได้เมื่อต้องการทดสอบรูปก่อน ไม่ sync กับผู้ชมคนอื่น</div>
+            <div style="font-weight:500;color:var(--gray-600);margin-bottom:2px;">📁 สำรอง — URL / ไฟล์ (เห็นแค่ browser นี้)</div>
+            <div style="color:var(--gray-400);font-size:11px;">ใช้ทดสอบก่อน deploy จริง</div>
           </div>
 
-          <!-- Option A: URL input -->
-          <label class="field-label" style="margin-bottom:6px;">ตัวเลือก A — URL รูป</label>
-          <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <!-- Option A: URL -->
+          <label class="field-label">ตัวเลือก A — URL รูป (เห็นแค่ browser นี้)</label>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
             <input type="text" class="field-input" id="banner-url-input"
               placeholder="https://i.postimg.cc/xxxx/banner.jpg"
               style="margin-bottom:0;flex:1;font-size:13px;">
             <button class="btn-primary" id="banner-url-apply-btn" style="flex:0 0 auto;white-space:nowrap;padding:12px 16px;font-size:13px;">ใช้ URL</button>
           </div>
 
-          <!-- Option B: File upload -->
-          <label class="field-label" style="margin-bottom:6px;">ตัวเลือก B — อัพโหลดไฟล์</label>
+          <!-- Option B: File -->
+          <label class="field-label">ตัวเลือก B — อัพโหลดไฟล์ (เห็นแค่ browser นี้)</label>
           <div class="drop-zone" id="banner-drop-zone" style="padding:16px;">
             <div id="banner-preview-wrap" style="display:none;margin-bottom:8px;">
-              <img id="banner-preview" style="width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;" alt="banner preview">
+              <img id="banner-preview" style="width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;" alt="preview">
             </div>
             <div id="banner-drop-inner" style="display:flex;align-items:center;gap:10px;justify-content:center;">
               <span style="font-size:22px;">🖼️</span>
@@ -881,31 +882,32 @@
             </div>
             <input type="file" id="banner-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
           </div>
-
           <div style="display:flex;gap:8px;margin-top:8px;">
             <button class="btn-primary" id="banner-apply-btn" disabled style="flex:1;">ใช้ไฟล์ที่เลือก</button>
-            <button class="btn-outline" id="banner-clear-btn" style="flex:0 0 auto;padding:12px 16px;">✕ ลบแบนเนอร์</button>
+            <button class="btn-outline" id="banner-clear-btn" style="flex:0 0 auto;padding:12px 16px;">✕ ลบ</button>
           </div>
           <div id="banner-feedback" class="save-feedback" style="margin-top:8px;"></div>
-        </div>
 
-        <div style="height:0.5px;background:var(--gray-100);margin:4px 0 20px;"></div>
+        </div><!-- /scroll wrap -->
+      </div>
 
-        <!-- SKU Breakdown -->
-        <p style="font-size:12px;color:#a0a0a0;margin-bottom:12px;line-height:1.6">
-          ดึงจาก Sheet หลักตัวเดียวกัน — group by <strong>sku</strong> อัตโนมัติ
-        </p>
-        <button class="btn-outline" id="breakdown-refresh-btn">🔄 โหลดข้อมูลสัดส่วน</button>
-        <div id="breakdown-chart-wrap" style="margin-top:20px;display:none;">
-          <canvas id="breakdown-chart" height="200"></canvas>
-          <div id="breakdown-legend" style="margin-top:14px;font-size:13px;"></div>
-          <!-- Last updated badge -->
-          <div id="breakdown-updated" style="display:none;margin-top:16px;padding:10px 14px;background:var(--gray-50);border-radius:var(--radius-sm);border:0.5px solid var(--gray-200);font-size:12px;color:var(--gray-400);display:flex;align-items:center;gap:8px;">
-            <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;display:inline-block;"></span>
-            <span id="breakdown-updated-text">—</span>
+      <!-- Breakdown Tab -->
+      <div class="tab-pane" id="tab-breakdown">
+        <div style="overflow-y:auto;max-height:60vh;padding-right:4px;">
+          <p style="font-size:12px;color:#a0a0a0;margin-bottom:12px;line-height:1.6">
+            ดึงจาก Sheet หลักตัวเดียวกัน — group by <strong>sku</strong> อัตโนมัติ
+          </p>
+          <button class="btn-outline" id="breakdown-refresh-btn">🔄 โหลดข้อมูลสัดส่วน</button>
+          <div id="breakdown-chart-wrap" style="margin-top:16px;display:none;">
+            <canvas id="breakdown-chart" height="200"></canvas>
+            <div id="breakdown-legend" style="margin-top:14px;font-size:13px;"></div>
+            <div id="breakdown-updated" style="display:none;margin-top:12px;padding:10px 14px;background:var(--gray-50);border-radius:var(--radius-sm);border:0.5px solid var(--gray-200);font-size:12px;color:var(--gray-400);align-items:center;gap:8px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;display:inline-block;"></span>
+              <span id="breakdown-updated-text">—</span>
+            </div>
           </div>
-        </div>
-        <div id="breakdown-feedback" class="save-feedback"></div>
+          <div id="breakdown-feedback" class="save-feedback"></div>
+        </div><!-- /scroll wrap -->
       </div>
 
       <button class="btn-danger" id="logout-btn" style="margin-top:20px">ออกจากระบบ</button>
@@ -1148,11 +1150,11 @@ window.addEventListener('load', () => {
 });
 
 /* ─────────────────────────────────────────
-   ADMIN KEY COMBO: Ctrl + Shift + A
+   ADMIN KEY COMBO: Ctrl + Shift + Q
 ───────────────────────────────────────── */
 let keyseq = [];
 document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+  if (e.ctrlKey && e.shiftKey && e.key === 'Q') {
     e.preventDefault();
     openAdmin();
   }
