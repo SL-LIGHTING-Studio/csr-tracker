@@ -1174,112 +1174,30 @@
 
       <!-- Channels Tab -->
       <div class="tab-pane" id="tab-channels">
-        <div style="overflow-y:auto;max-height:60vh;padding-right:4px;">
+        <div style="overflow-y:auto;max-height:62vh;padding-right:2px;">
 
-          <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px;line-height:1.6;">
-            บันทึกยอดขายแต่ละช่องทาง เพื่อติดตามภายในองค์กร (ไม่แสดงในหน้าเพจสาธารณะ)
-          </p>
-
-          <!-- ── Shopee ── -->
-          <div class="ch-section" style="border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:16px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-              <div style="width:32px;height:32px;border-radius:8px;background:#ee4d2d;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 1.77.57 3.4 1.53 4.73L5 21l7.5-1.5L20 21l-1.53-7.27A6.96 6.96 0 0 0 19 9c0-3.87-3.13-7-7-7zm0 2a5 5 0 1 1 0 10A5 5 0 0 1 12 4z"/></svg>
-              </div>
-              <div>
-                <div style="font-size:14px;font-weight:600;color:var(--gray-800);">Shopee</div>
-                <div style="font-size:11px;color:var(--gray-400);">ลูกค้าที่ซื้อผ่าน Shopee</div>
-              </div>
-              <div id="ch-shopee-total" style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:-0.03em;color:var(--gray-800);">—</div>
-              <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-            </div>
-            <div class="ch-products" data-channel="shopee">
-              <div class="ch-row" data-prod="haley" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:0.5px solid var(--gray-100);">
-                <div style="font-size:13px;color:var(--gray-600);flex:1;">ชุดรางไฟ HALEY</div>
-                <input type="number" class="ch-qty-input field-input" placeholder="0" min="0" style="width:90px;margin-bottom:0;text-align:right;padding:8px 10px;font-size:13px;">
-                <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-              </div>
-              <div class="ch-row" data-prod="comet_box" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:0.5px solid var(--gray-100);">
-                <div style="font-size:13px;color:var(--gray-600);flex:1;">COMET ยกลัง</div>
-                <input type="number" class="ch-qty-input field-input" placeholder="0" min="0" style="width:90px;margin-bottom:0;text-align:right;padding:8px 10px;font-size:13px;">
-                <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-              </div>
-              <div class="ch-row" data-prod="comet_single" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:0.5px solid var(--gray-100);">
-                <div style="font-size:13px;color:var(--gray-600);flex:1;">COMET เดี่ยว</div>
-                <input type="number" class="ch-qty-input field-input" placeholder="0" min="0" style="width:90px;margin-bottom:0;text-align:right;padding:8px 10px;font-size:13px;">
-                <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-              </div>
-            </div>
+          <!-- Source badge -->
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--gray-50);border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);margin-bottom:14px;font-size:12px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0;"></span>
+            <span style="color:var(--gray-600);">ดึงข้อมูลจาก <strong>Google Sheet</strong> คอลัมน์ <strong>CustomerName</strong> อัตโนมัติ</span>
+            <button id="ch-refresh-btn" style="margin-left:auto;padding:4px 10px;border-radius:100px;border:0.5px solid var(--gray-200);background:var(--white);font-size:11px;cursor:pointer;color:var(--gray-600);font-family:var(--font);">↺ รีเฟรช</button>
           </div>
 
-          <!-- ── หน้าร้าน ── -->
-          <div class="ch-section" style="border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:16px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-              <div style="width:32px;height:32px;border-radius:8px;background:var(--gray-800);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              </div>
-              <div>
-                <div style="font-size:14px;font-weight:600;color:var(--gray-800);">หน้าร้าน</div>
-                <div style="font-size:11px;color:var(--gray-400);">ลูกค้าที่ซื้อที่ร้านโดยตรง</div>
-              </div>
-              <div id="ch-store-total" style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:-0.03em;color:var(--gray-800);">—</div>
-              <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-            </div>
-            <div class="ch-products" data-channel="store">
-              <div class="ch-row" data-prod="haley" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:0.5px solid var(--gray-100);">
-                <div style="font-size:13px;color:var(--gray-600);flex:1;">ชุดรางไฟ HALEY</div>
-                <input type="number" class="ch-qty-input field-input" placeholder="0" min="0" style="width:90px;margin-bottom:0;text-align:right;padding:8px 10px;font-size:13px;">
-                <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-              </div>
-              <div class="ch-row" data-prod="comet_box" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:0.5px solid var(--gray-100);">
-                <div style="font-size:13px;color:var(--gray-600);flex:1;">COMET ยกลัง</div>
-                <input type="number" class="ch-qty-input field-input" placeholder="0" min="0" style="width:90px;margin-bottom:0;text-align:right;padding:8px 10px;font-size:13px;">
-                <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-              </div>
-              <div class="ch-row" data-prod="comet_single" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:0.5px solid var(--gray-100);">
-                <div style="font-size:13px;color:var(--gray-600);flex:1;">COMET เดี่ยว</div>
-                <input type="number" class="ch-qty-input field-input" placeholder="0" min="0" style="width:90px;margin-bottom:0;text-align:right;padding:8px 10px;font-size:13px;">
-                <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-              </div>
-            </div>
+          <!-- Channel cards container -->
+          <div id="ch-cards-wrap"></div>
+
+          <!-- Grand total -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--gray-800);border-radius:var(--radius-sm);margin-top:4px;">
+            <span style="font-size:13px;color:rgba(255,255,255,0.7);">รวมทุกช่องทาง</span>
+            <span id="ch-grand-total" style="font-size:18px;font-weight:600;color:var(--white);letter-spacing:-0.02em;">—</span>
           </div>
 
-          <!-- ── Trade (ร้านค้าลูกค้า) ── -->
-          <div class="ch-section" style="border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:16px;margin-bottom:14px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-              <div style="width:32px;height:32px;border-radius:8px;background:#2563eb;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-              </div>
-              <div>
-                <div style="font-size:14px;font-weight:600;color:var(--gray-800);">ลูกค้า Trade</div>
-                <div style="font-size:11px;color:var(--gray-400);">ยอดรวมจากร้านค้าพาร์ทเนอร์</div>
-              </div>
-              <div id="ch-trade-total" style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:-0.03em;color:var(--gray-800);">—</div>
-              <div style="font-size:11px;color:var(--gray-400);">ชิ้น</div>
-            </div>
-            <div id="trade-rows-wrap"></div>
-            <button class="btn-outline" id="ch-trade-add-row" style="padding:8px 14px;font-size:12px;width:auto;margin-top:8px;">
-              + เพิ่มร้านค้า
-            </button>
-          </div>
-
-          <!-- Channel summary bar -->
-          <div style="background:var(--gray-50);border-radius:var(--radius-sm);border:0.5px solid var(--gray-200);padding:14px 16px;margin-bottom:14px;">
-            <div style="font-size:12px;font-weight:500;color:var(--gray-800);margin-bottom:10px;">สรุปยอดรวมทุกช่องทาง</div>
-            <div id="ch-summary-bars"></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-400);margin-top:10px;padding-top:10px;border-top:0.5px solid var(--gray-200);">
-              <span>รวมทั้งหมด</span>
-              <span id="ch-grand-total" style="font-weight:600;color:var(--gray-800);">—</span>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="ch-save-btn">💾 บันทึกข้อมูลช่องทาง</button>
           <div id="channels-feedback" class="save-feedback" style="margin-top:8px;"></div>
 
         </div>
       </div>
 
-      <!-- Breakdown Tab -->
+      <!-- Breakdown Tab -->      <!-- Breakdown Tab -->
       <div class="tab-pane" id="tab-breakdown">
         <div style="overflow-y:auto;max-height:60vh;padding-right:4px;">
           <p style="font-size:12px;color:#a0a0a0;margin-bottom:12px;line-height:1.6">
@@ -1431,7 +1349,7 @@ function calcBonus(bulbs) {
   return Math.floor(bulbs / CONFIG.milestoneTarget) * 100000;
 }
 
-function applyData(bulbs, donation, period, skuMap) {
+function applyData(bulbs, donation, period, skuMap, channelMap) {
   const b = +bulbs || 0;
   const bonus = calcBonus(b);
   // ถ้า Sheet มี donation column ให้ใช้ แต่ถ้าไม่มี (donation=0 หรือ = bulbs) ให้คำนวณเอง
@@ -1445,7 +1363,8 @@ function applyData(bulbs, donation, period, skuMap) {
     bonus: bonus,
     period: period || '—',
     lastUpdated: new Date().toISOString(),
-    skuMap: skuMap || {}
+    skuMap: skuMap || {},
+    channelMap: channelMap || null
   };
   LS.set('csr_data', state);
   renderUI(state);
@@ -1484,11 +1403,14 @@ function parseCSV(text) {
   const qtyIdx = headers.indexOf('qty');
   const donIdx = headers.indexOf('donation');
   const perIdx = headers.indexOf('period');
+  const custIdx = headers.indexOf('customername');
 
   let totalQty = 0;
   let totalDon = 0;
   let period = '1 เม.ย. – 30 ก.ย. 2569';
   const skuMap = {};
+  // channelMap: { shopee:{sku:qty}, store:{sku:qty}, trade:{shopName:{sku:qty}} }
+  const channelMap = { shopee: {}, store: {}, trade: {} };
 
   for (let i = 1; i < lines.length; i++) {
     const row = lines[i];
@@ -1497,18 +1419,33 @@ function parseCSV(text) {
     const don = parseFloat((row[donIdx] || '0').replace(/,/g,'')) || 0;
     const sku = skuIdx >= 0 ? (row[skuIdx] || '').replace(/^"|"$/g,'').trim() : '';
     const per = perIdx >= 0 ? (row[perIdx] || '').replace(/^"|"$/g,'').trim() : '';
+    const cust = custIdx >= 0 ? (row[custIdx] || '').replace(/^"|"$/g,'').trim() : '';
     totalQty += qty;
     totalDon += don > 0 ? don : qty;
     if (per) period = per;
-    if (sku) {
-      skuMap[sku] = (skuMap[sku] || 0) + qty;
+    if (sku) skuMap[sku] = (skuMap[sku] || 0) + qty;
+
+    // Channel grouping by CustomerName
+    if (qty > 0) {
+      const custLower = cust.toLowerCase();
+      let ch, key;
+      if (custLower === 'shopee') { ch = 'shopee'; }
+      else if (custLower === 'showroom' || custLower === 'หน้าร้าน' || custLower === 'store') { ch = 'store'; }
+      else { ch = 'trade'; }
+
+      if (ch === 'trade') {
+        if (!channelMap.trade[cust]) channelMap.trade[cust] = {};
+        channelMap.trade[cust][sku || 'unknown'] = (channelMap.trade[cust][sku || 'unknown'] || 0) + qty;
+      } else {
+        channelMap[ch][sku || 'unknown'] = (channelMap[ch][sku || 'unknown'] || 0) + qty;
+      }
     }
   }
 
   // ถ้าไม่มี donation column ให้ใช้ qty เป็นยอดบริจาค (1 ชิ้น = 1 บาท)
   if (donIdx < 0) totalDon = totalQty;
 
-  return { bulbs: totalQty, donation: totalDon, period, skuMap };
+  return { bulbs: totalQty, donation: totalDon, period, skuMap, channelMap };
 }
 
 async function autoRefreshFromSheet() {
@@ -1516,7 +1453,9 @@ async function autoRefreshFromSheet() {
   if (!id) return;
   try {
     const d = await fetchSheetData(id);
-    applyData(d.bulbs, d.donation, d.period, d.skuMap);
+    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap);
+    // Update channel tab if open
+    if (d.channelMap) renderChannelFromSheet(d.channelMap);
   } catch (e) { console.warn('Sheet refresh failed:', e.message); }
 }
 
@@ -1713,7 +1652,9 @@ document.getElementById('sheet-refresh-btn').addEventListener('click', async () 
   showFeedback('sheet-feedback', '⟳ กำลังดึงข้อมูล…', true);
   try {
     const d = await fetchSheetData(id);
-    applyData(d.bulbs, d.donation, d.period, d.skuMap);
+    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap);
+    // Update channel tab if open
+    if (d.channelMap) renderChannelFromSheet(d.channelMap);
     showFeedback('sheet-feedback', '✓ ดึงข้อมูลสำเร็จ', true);
   } catch (e) {
     showFeedback('sheet-feedback', 'ผิดพลาด: ' + e.message, false);
@@ -2318,180 +2259,186 @@ window.addEventListener('load', () => {
 
 
 /* ─────────────────────────────────────────
-   SALES CHANNELS — Admin internal tracking
-   3 channels: shopee / store / trade
-   Private — not shown on public page
+   SALES CHANNELS — auto-rendered from Google Sheet
+   CustomerName column: "Shopee" / "Showroom"|"หน้าร้าน"|"Store" / else=Trade
 ───────────────────────────────────────── */
 
-const CHANNEL_IDS = ['shopee', 'store', 'trade'];
-const CHANNEL_LABELS = { shopee: 'Shopee', store: 'หน้าร้าน', trade: 'ลูกค้า Trade' };
-const CHANNEL_COLORS = { shopee: '#ee4d2d', store: '#1d1d1f', trade: '#2563eb' };
-const PROD_LABELS = { haley: 'HALEY', comet_box: 'COMET ลัง', comet_single: 'COMET เดี่ยว' };
+const CHANNEL_META = {
+  shopee: { label: 'E-Commerce',              color: '#ee4d2d', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' },
+  store:  { label: 'หน้าร้าน / Showroom',    color: '#1d1d1f', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' },
+  trade:  { label: 'ร้านค้าไฟฟ้า / Trade',  color: '#2563eb', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' },
+};
 
-function getChannelData() {
-  return LS.get('channels_data', {
-    shopee: { haley: 0, comet_box: 0, comet_single: 0 },
-    store:  { haley: 0, comet_box: 0, comet_single: 0 },
-    trade:  {}  // dynamic rows: { shopName: { haley:0, comet_box:0, comet_single:0 } }
-  });
+function sumMap(obj) {
+  return Object.values(obj).reduce((s, v) => s + (typeof v === 'object' ? sumMap(v) : (+v||0)), 0);
 }
 
-function channelTotal(ch) {
-  const data = getChannelData()[ch] || {};
-  // trade has nested { shopName: { prods... } }
-  if (ch === 'trade') {
-    return Object.values(data).reduce((sum, prods) => {
-      return sum + Object.values(prods).reduce((s, v) => s + (+v || 0), 0);
-    }, 0);
-  }
-  return Object.values(data).reduce((s, v) => s + (+v || 0), 0);
-}
-
-function loadChannelInputs() {
-  const data = getChannelData();
-  // Shopee + Store
-  ['shopee', 'store'].forEach(ch => {
-    const wrap = document.querySelector(`.ch-products[data-channel="${ch}"]`);
-    if (!wrap) return;
-    wrap.querySelectorAll('.ch-row').forEach(row => {
-      const prod = row.dataset.prod;
-      const input = row.querySelector('.ch-qty-input');
-      if (input) input.value = data[ch]?.[prod] || '';
-    });
-    const total = channelTotal(ch);
-    const totalEl = document.getElementById(`ch-${ch}-total`);
-    if (totalEl) totalEl.textContent = total > 0 ? total.toLocaleString('th-TH') : '—';
-  });
-  // Trade — rebuild rows
-  buildTradeRows(data.trade || {});
-  updateChannelSummary();
-}
-
-function buildTradeRows(tradeData) {
-  const wrap = document.getElementById('trade-rows-wrap');
+function renderChannelFromSheet(channelMap) {
+  const wrap = document.getElementById('ch-cards-wrap');
+  const grandEl = document.getElementById('ch-grand-total');
   if (!wrap) return;
-  wrap.innerHTML = '';
-  const shops = Object.keys(tradeData);
-  if (shops.length === 0) {
-    wrap.innerHTML = '<div style="font-size:12px;color:var(--gray-400);padding:8px 0;">ยังไม่มีร้านค้า — กด "+ เพิ่มร้านค้า"</div>';
+
+  const shopeeTotal = sumMap(channelMap.shopee || {});
+  const storeTotal  = sumMap(channelMap.store  || {});
+  const tradeShops  = channelMap.trade || {};
+  const tradeTotal  = sumMap(tradeShops);
+  const grand       = shopeeTotal + storeTotal + tradeTotal;
+
+  if (grandEl) grandEl.textContent = grand > 0 ? grand.toLocaleString('th-TH') + ' ชิ้น' : '—';
+
+  if (grand === 0) {
+    wrap.innerHTML = '<div style="text-align:center;padding:32px 0;font-size:13px;color:var(--gray-400);">ยังไม่มีข้อมูล — ตรวจสอบคอลัมน์ <strong>CustomerName</strong> ใน Sheet</div>';
+    return;
   }
-  shops.forEach(shopName => {
-    const prods = tradeData[shopName] || {};
-    const row = document.createElement('div');
-    row.className = 'trade-shop-block';
-    row.style.cssText = 'border-top:0.5px solid var(--gray-100);padding:10px 0;';
-    row.innerHTML = `
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-        <input type="text" class="trade-shop-name field-input"
-          value="${shopName}" placeholder="ชื่อร้านค้า"
-          style="flex:1;margin-bottom:0;font-size:12px;padding:8px 10px;font-weight:500;">
-        <button class="trade-delete-btn" title="ลบ" style="
-          width:28px;height:28px;border-radius:50%;background:var(--gray-100);
-          border:none;cursor:pointer;font-size:14px;color:var(--gray-600);
-          display:flex;align-items:center;justify-content:center;flex-shrink:0;
-          transition:background 0.2s;">✕</button>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-        ${['haley','comet_box','comet_single'].map(p => `
-          <div style="background:var(--gray-50);border-radius:6px;padding:8px;">
-            <div style="font-size:10px;color:var(--gray-400);margin-bottom:4px;">${PROD_LABELS[p]}</div>
-            <input type="number" class="trade-prod-qty field-input"
-              data-prod="${p}" min="0" placeholder="0"
-              value="${prods[p] || ''}"
-              style="width:100%;margin-bottom:0;font-size:13px;text-align:center;padding:6px 8px;">
-          </div>
-        `).join('')}
-      </div>`;
 
-    row.querySelector('.trade-delete-btn').addEventListener('click', () => {
-      const data = getChannelData();
-      delete data.trade[shopName];
-      LS.set('channels_data', data);
-      loadChannelInputs();
-    });
-    wrap.appendChild(row);
-  });
+  function pct(v) { return grand > 0 ? ((v/grand)*100).toFixed(1) : '0.0'; }
 
-  const tradeTotal = channelTotal('trade');
-  const tradeTotalEl = document.getElementById('ch-trade-total');
-  if (tradeTotalEl) tradeTotalEl.textContent = tradeTotal > 0 ? tradeTotal.toLocaleString('th-TH') : '—';
-}
+  // Simple 2-col SKU breakdown (Shopee + Store)
+  function skuRows(skuObj) {
+    const entries = Object.entries(skuObj).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
+    if (!entries.length) return '';
+    return '<div style="margin-top:8px;border-top:0.5px solid var(--gray-100);padding-top:8px;">' +
+      entries.map(([sku, qty]) =>
+        `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:12px;">
+          <span style="color:var(--gray-500);">${sku}</span>
+          <span style="font-weight:500;color:var(--gray-700);">${qty.toLocaleString('th-TH')} ชิ้น</span>
+        </div>`
+      ).join('') + '</div>';
+  }
 
-function updateChannelSummary() {
-  const barsWrap = document.getElementById('ch-summary-bars');
-  const grandTotal = document.getElementById('ch-grand-total');
-  if (!barsWrap) return;
-
-  const totals = {};
-  CHANNEL_IDS.forEach(ch => { totals[ch] = channelTotal(ch); });
-  const grand = Object.values(totals).reduce((s, v) => s + v, 0);
-
-  barsWrap.innerHTML = CHANNEL_IDS.map(ch => {
-    const pct = grand > 0 ? ((totals[ch] / grand) * 100).toFixed(1) : 0;
-    return `<div style="margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-        <span style="color:var(--gray-600);">${CHANNEL_LABELS[ch]}</span>
-        <span style="font-weight:500;color:var(--gray-800);">${totals[ch].toLocaleString('th-TH')} ชิ้น
-          <span style="color:var(--gray-400);font-weight:400;">(${pct}%)</span></span>
+  // Base channel card (Shopee + Store)
+  function channelCard(id, total, skuObj) {
+    const m = CHANNEL_META[id];
+    const p = pct(total);
+    return `<div style="border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;background:var(--white);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:${m.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${m.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--gray-800);">${m.label}</div>
+          <div style="font-size:11px;color:var(--gray-400);">${p}% ของยอดรวม</div>
+        </div>
+        <div style="font-size:20px;font-weight:600;letter-spacing:-0.03em;color:var(--gray-800);">${total.toLocaleString('th-TH')} <span style="font-size:11px;font-weight:400;color:var(--gray-400);">ชิ้น</span></div>
       </div>
       <div style="height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden;">
-        <div style="height:100%;width:${pct}%;background:${CHANNEL_COLORS[ch]};border-radius:3px;transition:width 0.5s;"></div>
+        <div style="height:100%;width:${p}%;background:${m.color};border-radius:3px;transition:width 0.6s ease;"></div>
+      </div>
+      ${skuRows(skuObj)}
+    </div>`;
+  }
+
+  // Trade card — รวมยอด + expandable leaderboard
+  function tradeCard(total, shops) {
+    const m = CHANNEL_META.trade;
+    const p = pct(total);
+    const shopEntries = Object.entries(shops)
+      .map(([name, skus]) => ({ name, total: sumMap(skus), skus }))
+      .filter(s => s.total > 0)
+      .sort((a, b) => b.total - a.total);
+    const topShops = shopEntries.slice(0, 3);   // Top 3 always visible
+    const restShops = shopEntries.slice(3);      // Rest collapsible
+
+    function shopRow(s, rank) {
+      const rankColors = ['#f59e0b','#9ca3af','#cd7c2f'];
+      const medal = rank < 3 ? `<span style="font-size:12px;margin-right:6px;">${['🥇','🥈','🥉'][rank]}</span>` : '';
+      const shopPct = total > 0 ? ((s.total/total)*100).toFixed(1) : '0';
+      const skuEntries = Object.entries(s.skus).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+      return `<div style="padding:9px 10px;background:var(--gray-50);border-radius:8px;margin-bottom:5px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:13px;font-weight:500;color:var(--gray-800);">${medal}${s.name}</span>
+          <div style="text-align:right;">
+            <span style="font-size:13px;font-weight:600;color:var(--gray-800);">${s.total.toLocaleString('th-TH')}</span>
+            <span style="font-size:11px;color:var(--gray-400);"> ชิ้น · ${shopPct}%</span>
+          </div>
+        </div>
+        ${skuEntries.length > 0 ? `<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:4px;">
+          ${skuEntries.map(([sku,q]) =>
+            `<span style="font-size:10px;padding:2px 8px;background:var(--white);border:0.5px solid var(--gray-200);border-radius:100px;color:var(--gray-500);">${sku} <strong style="color:var(--gray-700);">${q.toLocaleString('th-TH')}</strong></span>`
+          ).join('')}
+        </div>` : ''}
+      </div>`;
+    }
+
+    const restHtml = restShops.length > 0
+      ? `<div id="trade-rest-rows" style="display:none;">
+          ${restShops.map((s,i) => shopRow(s, i+3)).join('')}
+        </div>
+        <button onclick="const el=document.getElementById('trade-rest-rows');const btn=this;const isOpen=el.style.display!=='none';el.style.display=isOpen?'none':'block';btn.textContent=isOpen?'ดูทั้งหมด ${shopEntries.length} ร้าน ›':'ซ่อน ‹';"
+          style="width:100%;padding:8px;background:transparent;border:0.5px solid var(--gray-200);border-radius:8px;font-size:12px;color:var(--gray-500);cursor:pointer;font-family:var(--font);margin-top:2px;transition:all 0.2s;">
+          ดูทั้งหมด ${shopEntries.length} ร้าน ›
+        </button>`
+      : '';
+
+    return `<div style="border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;background:var(--white);">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:${m.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${m.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--gray-800);">${m.label}</div>
+          <div style="font-size:11px;color:var(--gray-400);">${p}% ของยอดรวม · ${shopEntries.length} ร้านค้า</div>
+        </div>
+        <div style="font-size:20px;font-weight:600;letter-spacing:-0.03em;color:var(--gray-800);">${total.toLocaleString('th-TH')} <span style="font-size:11px;font-weight:400;color:var(--gray-400);">ชิ้น</span></div>
+      </div>
+      <!-- Progress bar -->
+      <div style="height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden;margin-bottom:12px;">
+        <div style="height:100%;width:${p}%;background:${m.color};border-radius:3px;transition:width 0.6s ease;"></div>
+      </div>
+      <!-- Leaderboard header -->
+      ${shopEntries.length > 0 ? `
+      <div style="font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">
+        Top Shops
+      </div>
+      ${topShops.map((s,i) => shopRow(s, i)).join('')}
+      ${restHtml}` : ''}
+    </div>`;
+  }
+
+  // Render all 3 channels — always show all, show "ยังไม่มีข้อมูล" if 0
+  function emptyCard(id) {
+    const m = CHANNEL_META[id];
+    return `<div style="border:0.5px solid var(--gray-100);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;background:var(--gray-50);opacity:0.6;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:var(--gray-200);display:flex;align-items:center;justify-content:center;flex-shrink:0;">${m.icon.replace('fill="white"','fill="#999"').replace('stroke="white"','stroke="#999"')}</div>
+        <div style="font-size:13px;font-weight:500;color:var(--gray-400);">${m.label}</div>
+        <div style="margin-left:auto;font-size:12px;color:var(--gray-300);">ยังไม่มีข้อมูล</div>
       </div>
     </div>`;
-  }).join('');
+  }
 
-  if (grandTotal) grandTotal.textContent = grand > 0 ? grand.toLocaleString('th-TH') + ' ชิ้น' : '—';
+  wrap.innerHTML =
+    (shopeeTotal > 0 ? channelCard('shopee', shopeeTotal, channelMap.shopee) : emptyCard('shopee')) +
+    (storeTotal  > 0 ? channelCard('store',  storeTotal,  channelMap.store)  : emptyCard('store'))  +
+    (tradeTotal  > 0 ? tradeCard(tradeTotal, tradeShops)                     : emptyCard('trade'));
 }
 
-// Add trade row
-document.getElementById('ch-trade-add-row').addEventListener('click', () => {
-  const data = getChannelData();
-  const newName = 'ร้านค้าใหม่ ' + (Object.keys(data.trade || {}).length + 1);
-  if (!data.trade) data.trade = {};
-  data.trade[newName] = { haley: 0, comet_box: 0, comet_single: 0 };
-  LS.set('channels_data', data);
-  loadChannelInputs();
-});
-
-// Save all channels
-document.getElementById('ch-save-btn').addEventListener('click', () => {
-  const data = getChannelData();
-  // Save Shopee + Store
-  ['shopee', 'store'].forEach(ch => {
-    const wrap = document.querySelector(`.ch-products[data-channel="${ch}"]`);
-    if (!wrap) return;
-    if (!data[ch]) data[ch] = {};
-    wrap.querySelectorAll('.ch-row').forEach(row => {
-      const prod = row.dataset.prod;
-      const input = row.querySelector('.ch-qty-input');
-      data[ch][prod] = +(input?.value || 0);
-    });
-  });
-  // Save Trade (read current DOM)
-  data.trade = {};
-  document.querySelectorAll('.trade-shop-block').forEach(block => {
-    const nameInput = block.querySelector('.trade-shop-name');
-    const shopName = nameInput?.value?.trim() || '';
-    if (!shopName) return;
-    data.trade[shopName] = {};
-    block.querySelectorAll('.trade-prod-qty').forEach(inp => {
-      data.trade[shopName][inp.dataset.prod] = +(inp.value || 0);
-    });
-  });
+// Refresh button in channel tab
+document.getElementById('ch-refresh-btn').addEventListener('click', async () => {
+  const id = getSheetId();
+  if (!id) { showFeedback('channels-feedback', 'กรุณาเชื่อม Google Sheet ก่อน (tab Google Sheet)', false); return; }
+  showFeedback('channels-feedback', '⟳ กำลังดึงข้อมูล…', true);
   try {
-    LS.set('channels_data', data);
-    loadChannelInputs();
-    showFeedback('channels-feedback', '✓ บันทึกข้อมูลช่องทางเรียบร้อย', true);
+    const d = await fetchSheetData(id);
+    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap);
+    if (d.channelMap) renderChannelFromSheet(d.channelMap);
+    showFeedback('channels-feedback', '✓ อัพเดตข้อมูลช่องทางแล้ว', true);
   } catch(e) {
-    showFeedback('channels-feedback', 'เกิดข้อผิดพลาด: ' + e.message, false);
+    showFeedback('channels-feedback', 'ผิดพลาด: ' + e.message, false);
   }
 });
 
-// Load channel inputs when admin logs in (hook into refreshProductAdminPreviews)
-const _origRefreshProducts = refreshProductAdminPreviews;
 function refreshProductAdminPreviews() {
-  _origRefreshProducts();
-  loadChannelInputs();
+  // Load product previews
+  const data = getProductData();
+  document.querySelectorAll('.product-edit').forEach(block => {
+    const id = block.dataset.id;
+    const preview = block.querySelector('.prod-preview');
+    const urlInput = block.querySelector('.prod-img-url');
+    const linkInput = block.querySelector('.prod-link');
+    if (preview) preview.style.backgroundImage = `url('${data[id].image}')`;
+    if (urlInput && !urlInput.value) urlInput.placeholder = data[id].image.startsWith('http') ? data[id].image : 'https://i.postimg.cc/...';
+    if (linkInput) linkInput.value = data[id].shopeeUrl;
+  });
+  // Load channel data from cached state
+  if (state.channelMap) renderChannelFromSheet(state.channelMap);
 }
 
 
