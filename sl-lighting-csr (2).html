@@ -1425,18 +1425,26 @@ function parseCSV(text) {
     if (per) period = per;
     if (sku) skuMap[sku] = (skuMap[sku] || 0) + qty;
 
-    // Channel grouping by CustomerName
+    // Channel grouping by CustomerName — ใช้ "contains" ไม่ใช่ exact match
+    // เพราะชื่อจริงในระบบอาจเป็น "ลูกค้า Shopee", "ออเดอร์ Lazada" เป็นต้น
+    const ECOMMERCE_KEYWORDS = ['shopee','lazada','nocnoc','noc noc','tiktok','line shopping','jd central','central online','lazpmall'];
+    const STORE_KEYWORDS     = ['showroom','หน้าร้าน','store','โชว์รูม'];
     if (qty > 0) {
-      const custLower = cust.toLowerCase();
-      let ch, key;
-      if (custLower === 'shopee') { ch = 'shopee'; }
-      else if (custLower === 'showroom' || custLower === 'หน้าร้าน' || custLower === 'store') { ch = 'store'; }
-      else { ch = 'trade'; }
+      const custLower = cust.toLowerCase().trim();
+      // ตรวจสอบด้วย includes (contains) ไม่ใช่ === (exact)
+      const isEcommerce = ECOMMERCE_KEYWORDS.some(k => custLower.includes(k));
+      const isStore     = STORE_KEYWORDS.some(k => custLower.includes(k));
+      let ch = isEcommerce ? 'shopee' : isStore ? 'store' : 'trade';
 
       if (ch === 'trade') {
         if (!channelMap.trade[cust]) channelMap.trade[cust] = {};
         channelMap.trade[cust][sku || 'unknown'] = (channelMap.trade[cust][sku || 'unknown'] || 0) + qty;
+      } else if (ch === 'shopee') {
+        // group by ชื่อ CustomerName เต็ม (เช่น "ลูกค้า Shopee") ภายใน E-Commerce
+        if (!channelMap.shopee[cust]) channelMap.shopee[cust] = {};
+        channelMap.shopee[cust][sku || 'unknown'] = (channelMap.shopee[cust][sku || 'unknown'] || 0) + qty;
       } else {
+        // store — flat {sku:qty}
         channelMap[ch][sku || 'unknown'] = (channelMap[ch][sku || 'unknown'] || 0) + qty;
       }
     }
@@ -2278,9 +2286,9 @@ function renderChannelFromSheet(channelMap) {
   const grandEl = document.getElementById('ch-grand-total');
   if (!wrap) return;
 
-  const shopeeTotal = sumMap(channelMap.shopee || {});
-  const storeTotal  = sumMap(channelMap.store  || {});
-  const tradeShops  = channelMap.trade || {};
+  const shopeeTotal = sumMap(channelMap.shopee || {});  // nested: {platform:{sku:qty}}
+  const storeTotal  = sumMap(channelMap.store  || {});  // flat: {sku:qty}
+  const tradeShops  = channelMap.trade || {};            // nested: {shop:{sku:qty}}
   const tradeTotal  = sumMap(tradeShops);
   const grand       = shopeeTotal + storeTotal + tradeTotal;
 
@@ -2306,7 +2314,47 @@ function renderChannelFromSheet(channelMap) {
       ).join('') + '</div>';
   }
 
-  // Base channel card (Shopee + Store)
+  // E-Commerce card: shows platform breakdown (shopee, lazada, tiktok, etc.)
+  function ecommerceCard(platformMap) {
+    const m = CHANNEL_META.shopee;
+    const total = sumMap(platformMap);
+    const p = pct(total);
+    // Build platform entries sorted by total
+    const platforms = Object.entries(platformMap)
+      .map(([name, skus]) => ({ name, total: sumMap(skus), skus }))
+      .filter(s => s.total > 0)
+      .sort((a, b) => b.total - a.total);
+    const platformHTML = platforms.map(pl => {
+      const plPct = total > 0 ? ((pl.total/total)*100).toFixed(1) : '0';
+      const skuEntries = Object.entries(pl.skus).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+      return `<div style="padding:8px 10px;background:var(--gray-50);border-radius:8px;margin-bottom:5px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;font-weight:500;color:var(--gray-800);text-transform:capitalize;">${pl.name}</span>
+          <div><span style="font-size:13px;font-weight:600;color:var(--gray-800);">${pl.total.toLocaleString('th-TH')}</span>
+          <span style="font-size:11px;color:var(--gray-400);"> ชิ้น · ${plPct}%</span></div>
+        </div>
+        ${skuEntries.length > 0 ? `<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;">
+          ${skuEntries.map(([sku,q])=>`<span style="font-size:10px;padding:2px 8px;background:var(--white);border:0.5px solid var(--gray-200);border-radius:100px;color:var(--gray-500);">${sku} <strong style="color:var(--gray-700);">${q.toLocaleString('th-TH')}</strong></span>`).join('')}
+        </div>` : ''}
+      </div>`;
+    }).join('');
+    return `<div style="border:0.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;background:var(--white);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:${m.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${m.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--gray-800);">${m.label}</div>
+          <div style="font-size:11px;color:var(--gray-400);">${p}% ของยอดรวม · ${platforms.length} แพลตฟอร์ม</div>
+        </div>
+        <div style="font-size:20px;font-weight:600;letter-spacing:-0.03em;color:var(--gray-800);">${total.toLocaleString('th-TH')} <span style="font-size:11px;font-weight:400;color:var(--gray-400);">ชิ้น</span></div>
+      </div>
+      <div style="height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden;margin-bottom:${platforms.length>0?'10px':'0'};">
+        <div style="height:100%;width:${p}%;background:${m.color};border-radius:3px;transition:width 0.6s ease;"></div>
+      </div>
+      ${platformHTML}
+    </div>`;
+  }
+
+  // Base channel card (Store only — skuObj is flat {sku:qty})
   function channelCard(id, total, skuObj) {
     const m = CHANNEL_META[id];
     const p = pct(total);
@@ -2405,7 +2453,7 @@ function renderChannelFromSheet(channelMap) {
   }
 
   wrap.innerHTML =
-    (shopeeTotal > 0 ? channelCard('shopee', shopeeTotal, channelMap.shopee) : emptyCard('shopee')) +
+    (shopeeTotal > 0 ? ecommerceCard(channelMap.shopee) : emptyCard('shopee')) +
     (storeTotal  > 0 ? channelCard('store',  storeTotal,  channelMap.store)  : emptyCard('store'))  +
     (tradeTotal  > 0 ? tradeCard(tradeTotal, tradeShops)                     : emptyCard('trade'));
 }
