@@ -908,7 +908,7 @@
 
 <!-- UPDATE BAR -->
 <div class="update-bar">
-  ออเดอร์ล่าสุด: <span id="last-updated-time">กำลังโหลด…</span>
+  อัพเดตล่าสุด: <span id="last-updated-time">กำลังโหลด…</span>
   &nbsp;·&nbsp; ซื้อ LED T8 COMET / HALEY ที่ร่วมรายการ เพื่อช่วยเหลือผู้ป่วยเด็กยากไร้
 </div>
 
@@ -1339,7 +1339,7 @@ function renderUI(s) {
     // public badge under ring
     const pubText = document.getElementById('public-updated-text');
     const pubDot  = document.getElementById('public-updated-dot');
-    if (pubText) pubText.textContent = 'ออเดอร์ล่าสุด ' + fullStr;
+    if (pubText) pubText.textContent = 'อัพเดตล่าสุด ' + fullStr;
     if (pubDot)  pubDot.style.background = '#22c55e';
   }
 }
@@ -1414,7 +1414,7 @@ function parseCSV(text) {
   let totalQty = 0;
   let totalDon = 0;
   let period = '1 เม.ย. – 30 ก.ย. 2569';
-  let latestOrderDate = null;   // วันที่ออเดอร์ล่าสุด
+  let latestOrderDate = null;   // วันที่อัพเดตล่าสุด
   const skuMap = {};
   // channelMap: { shopee:{platform:{sku:qty}}, store:{sku:qty}, trade:{shopName:{sku:qty}} }
   const channelMap = { shopee: {}, store: {}, trade: {} };
