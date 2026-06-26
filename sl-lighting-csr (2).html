@@ -908,7 +908,7 @@
 
 <!-- UPDATE BAR -->
 <div class="update-bar">
-  อัพเดตล่าสุด: <span id="last-updated-time">กำลังโหลด…</span>
+  ออเดอร์ล่าสุด: <span id="last-updated-time">กำลังโหลด…</span>
   &nbsp;·&nbsp; ซื้อ LED T8 COMET / HALEY ที่ร่วมรายการ เพื่อช่วยเหลือผู้ป่วยเด็กยากไร้
 </div>
 
@@ -1325,12 +1325,12 @@ function renderUI(s) {
     badge.style.display = 'none';
   }
 
-  // Last updated — update bar (footer) + public badge under ring
+  // Last updated — shows latest ORDER date from sheet, or sync time if manual
   if (s.lastUpdated) {
     const d = new Date(s.lastUpdated);
-    const dateStr = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+    const dateStr = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
     const timeStr = d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
-    const fullStr = dateStr + ' ' + timeStr;
+    const fullStr = dateStr + ' เวลา ' + timeStr + ' น.';
 
     // footer bar
     const footerEl = document.getElementById('last-updated-time');
@@ -1339,7 +1339,7 @@ function renderUI(s) {
     // public badge under ring
     const pubText = document.getElementById('public-updated-text');
     const pubDot  = document.getElementById('public-updated-dot');
-    if (pubText) pubText.textContent = 'อัพเดตล่าสุด ' + fullStr;
+    if (pubText) pubText.textContent = 'ออเดอร์ล่าสุด ' + fullStr;
     if (pubDot)  pubDot.style.background = '#22c55e';
   }
 }
@@ -1349,7 +1349,7 @@ function calcBonus(bulbs) {
   return Math.floor(bulbs / CONFIG.milestoneTarget) * 100000;
 }
 
-function applyData(bulbs, donation, period, skuMap, channelMap) {
+function applyData(bulbs, donation, period, skuMap, channelMap, latestOrderDate) {
   const b = +bulbs || 0;
   const bonus = calcBonus(b);
   // ถ้า Sheet มี donation column ให้ใช้ แต่ถ้าไม่มี (donation=0 หรือ = bulbs) ให้คำนวณเอง
@@ -1362,7 +1362,7 @@ function applyData(bulbs, donation, period, skuMap, channelMap) {
     baseDonation: baseDon,
     bonus: bonus,
     period: period || '—',
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: latestOrderDate ? latestOrderDate.toISOString() : new Date().toISOString(),
     skuMap: skuMap || {},
     channelMap: channelMap || null
   };
@@ -1399,27 +1399,57 @@ function parseCSV(text) {
   });
   if (lines.length < 2) throw new Error('ไม่พบข้อมูลใน Sheet');
   const headers = lines[0].map(h => h.toLowerCase().replace(/^"|"$/g,'').trim());
-  const skuIdx = headers.indexOf('sku');
-  const qtyIdx = headers.indexOf('qty');
-  const donIdx = headers.indexOf('donation');
-  const perIdx = headers.indexOf('period');
+  const skuIdx  = headers.indexOf('sku');
+  const qtyIdx  = headers.indexOf('qty');
+  const donIdx  = headers.indexOf('donation');
+  const perIdx  = headers.indexOf('period');
   const custIdx = headers.indexOf('customername');
+  // date column — รองรับ 'datetime', 'date', 'order_date'
+  const dateIdx = headers.indexOf('datetime') >= 0
+    ? headers.indexOf('datetime')
+    : headers.indexOf('date') >= 0
+      ? headers.indexOf('date')
+      : headers.indexOf('order_date');
 
   let totalQty = 0;
   let totalDon = 0;
   let period = '1 เม.ย. – 30 ก.ย. 2569';
+  let latestOrderDate = null;   // วันที่ออเดอร์ล่าสุด
   const skuMap = {};
-  // channelMap: { shopee:{sku:qty}, store:{sku:qty}, trade:{shopName:{sku:qty}} }
+  // channelMap: { shopee:{platform:{sku:qty}}, store:{sku:qty}, trade:{shopName:{sku:qty}} }
   const channelMap = { shopee: {}, store: {}, trade: {} };
 
   for (let i = 1; i < lines.length; i++) {
     const row = lines[i];
     if (!row.some(c => c !== '')) continue;
-    const qty = parseFloat((row[qtyIdx] || '0').replace(/,/g,'')) || 0;
-    const don = parseFloat((row[donIdx] || '0').replace(/,/g,'')) || 0;
-    const sku = skuIdx >= 0 ? (row[skuIdx] || '').replace(/^"|"$/g,'').trim() : '';
-    const per = perIdx >= 0 ? (row[perIdx] || '').replace(/^"|"$/g,'').trim() : '';
+    const qty  = parseFloat((row[qtyIdx] || '0').replace(/,/g,'')) || 0;
+    const don  = parseFloat((row[donIdx] || '0').replace(/,/g,'')) || 0;
+    const sku  = skuIdx  >= 0 ? (row[skuIdx]  || '').replace(/^"|"$/g,'').trim() : '';
+    const per  = perIdx  >= 0 ? (row[perIdx]  || '').replace(/^"|"$/g,'').trim() : '';
     const cust = custIdx >= 0 ? (row[custIdx] || '').replace(/^"|"$/g,'').trim() : '';
+    const dateRaw = dateIdx >= 0 ? (row[dateIdx] || '').replace(/^"|"$/g,'').trim() : '';
+    // Parse date — รองรับ DD/MM/YYYY, YYYY-MM-DD, MM/DD/YYYY
+    if (dateRaw) {
+      let parsed = null;
+      // รูปแบบ DD-MM-YYYY HH:MM:SS (เช่น 20-04-2026 08:47:20)
+      const dmyTime = dateRaw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
+      if (dmyTime) {
+        const [, d, m, y, hh = '0', mm = '0', ss = '0'] = dmyTime;
+        parsed = new Date(+y, +m - 1, +d, +hh, +mm, +ss);
+      } else {
+        // DD/MM/YYYY
+        const dmySlash = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (dmySlash) {
+          parsed = new Date(+dmySlash[3], +dmySlash[2] - 1, +dmySlash[1]);
+        } else {
+          // ISO: YYYY-MM-DD หรือรูปแบบอื่น
+          parsed = new Date(dateRaw);
+        }
+      }
+      if (parsed && !isNaN(parsed) && (!latestOrderDate || parsed > latestOrderDate)) {
+        latestOrderDate = parsed;
+      }
+    }
     totalQty += qty;
     totalDon += don > 0 ? don : qty;
     if (per) period = per;
@@ -1453,7 +1483,7 @@ function parseCSV(text) {
   // ถ้าไม่มี donation column ให้ใช้ qty เป็นยอดบริจาค (1 ชิ้น = 1 บาท)
   if (donIdx < 0) totalDon = totalQty;
 
-  return { bulbs: totalQty, donation: totalDon, period, skuMap, channelMap };
+  return { bulbs: totalQty, donation: totalDon, period, skuMap, channelMap, latestOrderDate };
 }
 
 async function autoRefreshFromSheet() {
@@ -1461,7 +1491,7 @@ async function autoRefreshFromSheet() {
   if (!id) return;
   try {
     const d = await fetchSheetData(id);
-    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap);
+    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap, d.latestOrderDate);
     // Update channel tab if open
     if (d.channelMap) renderChannelFromSheet(d.channelMap);
   } catch (e) { console.warn('Sheet refresh failed:', e.message); }
@@ -1660,7 +1690,7 @@ document.getElementById('sheet-refresh-btn').addEventListener('click', async () 
   showFeedback('sheet-feedback', '⟳ กำลังดึงข้อมูล…', true);
   try {
     const d = await fetchSheetData(id);
-    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap);
+    applyData(d.bulbs, d.donation, d.period, d.skuMap, d.channelMap, d.latestOrderDate);
     // Update channel tab if open
     if (d.channelMap) renderChannelFromSheet(d.channelMap);
     showFeedback('sheet-feedback', '✓ ดึงข้อมูลสำเร็จ', true);
