@@ -1288,7 +1288,7 @@ function renderUI(s) {
   // Tooltip on hover
   const ringTooltip = document.getElementById('ring-tooltip');
   if (ringTooltip) {
-    ringTooltip.textContent = Math.round(pct * 100) + '% ของเป้าหมาย ' + fmt(CONFIG.milestoneTarget) + ' ชิ้น';
+    ringTooltip.textContent = (pct * 100).toFixed(2) + '% ของเป้าหมาย ' + fmt(CONFIG.milestoneTarget) + ' ชิ้น';
   }
 
   // Stats
@@ -1310,7 +1310,7 @@ function renderUI(s) {
   // Milestone pct text
   const bonusCount = milestonesPassed;
   const bonusTotal = bonusCount * 100000;
-  let milestoneText = fmt(s.bulbs) + ' / ' + fmt(nextMilestone) + ' ชิ้น (' + Math.round(barPct * 100) + '%)';
+  let milestoneText = fmt(s.bulbs) + ' / ' + fmt(nextMilestone) + ' ชิ้น (' + (barPct * 100).toFixed(2) + '%)';
   if (bonusCount > 0) {
     milestoneText += ' — ได้รับ Bonus แล้ว ' + bonusCount + ' ครั้ง (+฿' + fmt(bonusTotal) + ')';
   }
@@ -1414,7 +1414,7 @@ function parseCSV(text) {
   let totalQty = 0;
   let totalDon = 0;
   let period = '1 เม.ย. – 30 ก.ย. 2569';
-  let latestOrderDate = null;   // วันที่อัพเดตล่าสุด
+  let lastRowDate = null;   // DateTime ของแถวสุดท้ายที่มีข้อมูล
   const skuMap = {};
   // channelMap: { shopee:{platform:{sku:qty}}, store:{sku:qty}, trade:{shopName:{sku:qty}} }
   const channelMap = { shopee: {}, store: {}, trade: {} };
@@ -1430,25 +1430,21 @@ function parseCSV(text) {
     const dateRaw = dateIdx >= 0 ? (row[dateIdx] || '').replace(/^"|"$/g,'').trim() : '';
     // Parse date — รองรับ DD/MM/YYYY, YYYY-MM-DD, MM/DD/YYYY
     if (dateRaw) {
+      // parse DD-MM-YYYY HH:MM:SS แล้ว overwrite ทุกแถว → แถวสุดท้ายที่มีข้อมูล = ล่าสุด
       let parsed = null;
-      // รูปแบบ DD-MM-YYYY HH:MM:SS (เช่น 20-04-2026 08:47:20)
       const dmyTime = dateRaw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
       if (dmyTime) {
-        const [, d, m, y, hh = '0', mm = '0', ss = '0'] = dmyTime;
-        parsed = new Date(+y, +m - 1, +d, +hh, +mm, +ss);
+        const [, dd, mo, yy, hh = '0', mi = '0', ss = '0'] = dmyTime;
+        parsed = new Date(+yy, +mo - 1, +dd, +hh, +mi, +ss);
       } else {
-        // DD/MM/YYYY
         const dmySlash = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
         if (dmySlash) {
           parsed = new Date(+dmySlash[3], +dmySlash[2] - 1, +dmySlash[1]);
         } else {
-          // ISO: YYYY-MM-DD หรือรูปแบบอื่น
           parsed = new Date(dateRaw);
         }
       }
-      if (parsed && !isNaN(parsed) && (!latestOrderDate || parsed > latestOrderDate)) {
-        latestOrderDate = parsed;
-      }
+      if (parsed && !isNaN(parsed)) lastRowDate = parsed;  // เขียนทับทุกแถว
     }
     totalQty += qty;
     totalDon += don > 0 ? don : qty;
@@ -1483,7 +1479,7 @@ function parseCSV(text) {
   // ถ้าไม่มี donation column ให้ใช้ qty เป็นยอดบริจาค (1 ชิ้น = 1 บาท)
   if (donIdx < 0) totalDon = totalQty;
 
-  return { bulbs: totalQty, donation: totalDon, period, skuMap, channelMap, latestOrderDate };
+  return { bulbs: totalQty, donation: totalDon, period, skuMap, channelMap, latestOrderDate: lastRowDate };
 }
 
 async function autoRefreshFromSheet() {
