@@ -1432,16 +1432,26 @@ function parseCSV(text) {
     if (dateRaw) {
       // parse DD-MM-YYYY HH:MM:SS แล้ว overwrite ทุกแถว → แถวสุดท้ายที่มีข้อมูล = ล่าสุด
       let parsed = null;
-      const dmyTime = dateRaw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
-      if (dmyTime) {
-        const [, dd, mo, yy, hh = '0', mi = '0', ss = '0'] = dmyTime;
-        parsed = new Date(+yy, +mo - 1, +dd, +hh, +mi, +ss);
+      // 1. gviz CSV format: Date(2026,5,29,8,52,45) — month is 0-indexed already
+      const gvizMatch = dateRaw.match(/^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)$/);
+      if (gvizMatch) {
+        const [, y, m, d, hh='0', mi='0', ss='0'] = gvizMatch;
+        parsed = new Date(+y, +m, +d, +hh, +mi, +ss); // month already 0-indexed
       } else {
-        const dmySlash = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-        if (dmySlash) {
-          parsed = new Date(+dmySlash[3], +dmySlash[2] - 1, +dmySlash[1]);
+        // 2. DD-MM-YYYY HH:MM:SS (dash, Thai style from Sheet display)
+        const dmyTime = dateRaw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
+        if (dmyTime) {
+          const [, dd, mo, yy, hh = '0', mi = '0', ss = '0'] = dmyTime;
+          parsed = new Date(+yy, +mo - 1, +dd, +hh, +mi, +ss);
         } else {
-          parsed = new Date(dateRaw);
+          // 3. DD/MM/YYYY (slash)
+          const dmySlash = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+          if (dmySlash) {
+            parsed = new Date(+dmySlash[3], +dmySlash[2] - 1, +dmySlash[1]);
+          } else {
+            // 4. fallback — ISO or other
+            parsed = new Date(dateRaw);
+          }
         }
       }
       if (parsed && !isNaN(parsed)) lastRowDate = parsed;  // เขียนทับทุกแถว
