@@ -1432,25 +1432,41 @@ function parseCSV(text) {
     if (dateRaw) {
       // parse DD-MM-YYYY HH:MM:SS แล้ว overwrite ทุกแถว → แถวสุดท้ายที่มีข้อมูล = ล่าสุด
       let parsed = null;
-      // 1. gviz CSV format: Date(2026,5,29,8,52,45) — month is 0-indexed already
-      const gvizMatch = dateRaw.match(/^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)$/);
-      if (gvizMatch) {
-        const [, y, m, d, hh='0', mi='0', ss='0'] = gvizMatch;
-        parsed = new Date(+y, +m, +d, +hh, +mi, +ss); // month already 0-indexed
+      // รองรับทุก format ที่ gviz/tq ส่งมา:
+      // 1. "3/7/2026, 11:52:32"  → D/M/YYYY, H:MM:SS  (gviz locale format — most common)
+      // 2. "Date(2026,5,29,8,52,45)" → gviz Date() object format
+      // 3. "29-06-2026 08:52:45" → DD-MM-YYYY HH:MM:SS
+      // 4. "29/06/2026"          → DD/MM/YYYY
+
+      // FORMAT 1: D/M/YYYY, H:MM:SS  (gviz sends this when locale=en)
+      const slashComma = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s*(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+      if (slashComma) {
+        const [, d, m, y, hh, mi, ss='0'] = slashComma;
+        // D/M/YYYY — วันก่อน เดือนหลัง (Thai/EU convention)
+        parsed = new Date(+y, +m - 1, +d, +hh, +mi, +ss);
+
+      // FORMAT 2: Date(2026,5,29,8,52,45) — gviz Date() month=0-indexed
       } else {
-        // 2. DD-MM-YYYY HH:MM:SS (dash, Thai style from Sheet display)
-        const dmyTime = dateRaw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
-        if (dmyTime) {
-          const [, dd, mo, yy, hh = '0', mi = '0', ss = '0'] = dmyTime;
-          parsed = new Date(+yy, +mo - 1, +dd, +hh, +mi, +ss);
+        const gvizMatch = dateRaw.match(/^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)$/);
+        if (gvizMatch) {
+          const [, y, m, d, hh='0', mi='0', ss='0'] = gvizMatch;
+          parsed = new Date(+y, +m, +d, +hh, +mi, +ss);
+
+        // FORMAT 3: DD-MM-YYYY HH:MM:SS
         } else {
-          // 3. DD/MM/YYYY (slash)
-          const dmySlash = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-          if (dmySlash) {
-            parsed = new Date(+dmySlash[3], +dmySlash[2] - 1, +dmySlash[1]);
+          const dmyDash = dateRaw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
+          if (dmyDash) {
+            const [, dd, mo, yy, hh='0', mi='0', ss='0'] = dmyDash;
+            parsed = new Date(+yy, +mo - 1, +dd, +hh, +mi, +ss);
+
+          // FORMAT 4: DD/MM/YYYY (date only, no time)
           } else {
-            // 4. fallback — ISO or other
-            parsed = new Date(dateRaw);
+            const dmySlash = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            if (dmySlash) {
+              parsed = new Date(+dmySlash[3], +dmySlash[2] - 1, +dmySlash[1]);
+            } else {
+              parsed = new Date(dateRaw); // last resort
+            }
           }
         }
       }
