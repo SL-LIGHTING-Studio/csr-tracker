@@ -1479,7 +1479,7 @@ function parseCSV(text) {
 
     // Channel grouping by CustomerName — ใช้ "contains" ไม่ใช่ exact match
     // เพราะชื่อจริงในระบบอาจเป็น "ลูกค้า Shopee", "ออเดอร์ Lazada" เป็นต้น
-    const ECOMMERCE_KEYWORDS = ['shopee','lazada','nocnoc','noc noc','tiktok','line shopping','jd central','central online','lazpmall'];
+    const ECOMMERCE_KEYWORDS = ['shopee','lazada','nocnoc','noc noc','tiktok','line shopping','jd central','central online','lazpmall','homepro','home pro'];
     const STORE_KEYWORDS     = ['showroom','หน้าร้าน','store','โชว์รูม'];
     if (qty > 0) {
       const custLower = cust.toLowerCase().trim();
